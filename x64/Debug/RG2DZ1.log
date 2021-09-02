@@ -1,0 +1,19 @@
+﻿  glad.c
+  Main.cpp
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Shader.h(45,40): warning C4101: 'e': unreferenced local variable
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(9,36): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(9,25): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(25,32): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(36,36): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(62,19): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(62,43): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(164,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(266,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(267,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(271,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(272,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(274,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(275,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(284,31): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  RG2DZ1.vcxproj -> D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\x64\Debug\RG2DZ1.exe
