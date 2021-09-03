@@ -14,7 +14,7 @@
 
 #include <iostream>
 
-const int subdivision = 6;
+const int subdivision = 3;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -86,12 +86,24 @@ int main()
 
     unsigned int VAO, VBO;
     unsigned int EBO;
-    int numberOfVertices = generateVertices(subdivision, &VAO, &VBO, &EBO);
+
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
+    int numberOfVertices = generateCubeSphereVertices(subdivision);
 
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    
+    
     // texture coord attribute
     //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     //glEnableVertexAttribArray(1);
