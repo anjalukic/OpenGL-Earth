@@ -2,18 +2,19 @@
 D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Shader.h(45,40): warning C4101: 'e': unreferenced local variable
 D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(19,36): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(19,25): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data
-D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(35,36): warning C4018: '<': signed/unsigned mismatch
-D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(47,40): warning C4018: '<': signed/unsigned mismatch
-D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(67,23): warning C4018: '<': signed/unsigned mismatch
-D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(67,47): warning C4018: '<': signed/unsigned mismatch
-D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(176,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(278,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(279,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(283,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(284,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(286,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(287,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(296,31): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(177): warning C4715: 'calculateCoord': not all control paths return a value
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(20,30): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(20,20): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(36,36): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(48,40): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(76,23): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(76,49): warning C4018: '<': signed/unsigned mismatch
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(234,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(358,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(359,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(363,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(364,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(366,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(367,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Main.cpp(376,31): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\RG2DZ1\Cubesphere.h(185): warning C4715: 'calculateVertexCoord': not all control paths return a value
   RG2DZ1.vcxproj -> D:\Projects\rg2 projects\rg2 dz1\RG2DZ1\x64\Debug\RG2DZ1.exe

@@ -74,12 +74,12 @@ public:
         float velocity = MovementSpeed * deltaTime;
         if (direction == FORWARD) {
             glm::vec3 moveDir = Front;
-            moveDir.y = 0.0f;
+            //moveDir.y = 0.0f;
             Position += moveDir * velocity;
         } 
         if (direction == BACKWARD) {
             glm::vec3 moveDir = Front;
-            moveDir.y = 0.0f;
+            //moveDir.y = 0.0f;
             Position -= moveDir * velocity;
         }    
         if (direction == LEFT)

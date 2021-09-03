@@ -11,15 +11,18 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Cubesphere.h"
+//#include "Skybox.h"
 
 #include <iostream>
 
-const int subdivision = 3;
+const int subdivision = 6;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
+void initEarthTextureCubeMap(std::vector<std::string> faces, unsigned int* texture);
+void initEarthTexture2D(unsigned int* textureID);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -80,6 +83,7 @@ int main()
     // build and compile our shader zprogram
     // ------------------------------------
     Shader ourShader("Shader.vs", "Shader.fs");
+    Shader skyboxShader("skyboxShader.vs", "skyboxShader.fs");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -98,74 +102,128 @@ int main()
     int numberOfVertices = generateCubeSphereVertices(subdivision);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    
-    
     // texture coord attribute
-    //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    //glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    
+    //Skybox skybox = Skybox();
 
-    /*
+    float skyboxVertices[108] = {
+        // positions          
+            -1.0f, 1.0f, -1.0f,
+            -1.0f, -1.0f, -1.0f,
+            1.0f, -1.0f, -1.0f,
+            1.0f, -1.0f, -1.0f,
+            1.0f, 1.0f, -1.0f,
+            -1.0f, 1.0f, -1.0f,
+
+            -1.0f, -1.0f, 1.0f,
+            -1.0f, -1.0f, -1.0f,
+            -1.0f, 1.0f, -1.0f,
+            -1.0f, 1.0f, -1.0f,
+            -1.0f, 1.0f, 1.0f,
+            -1.0f, -1.0f, 1.0f,
+
+            1.0f, -1.0f, -1.0f,
+            1.0f, -1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, -1.0f,
+            1.0f, -1.0f, -1.0f,
+
+            -1.0f, -1.0f, 1.0f,
+            -1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f,
+            1.0f, -1.0f, 1.0f,
+            -1.0f, -1.0f, 1.0f,
+
+            -1.0f, 1.0f, -1.0f,
+            1.0f, 1.0f, -1.0f,
+            1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f,
+            -1.0f, 1.0f, 1.0f,
+            -1.0f, 1.0f, -1.0f,
+
+            -1.0f, -1.0f, -1.0f,
+            -1.0f, -1.0f, 1.0f,
+            1.0f, -1.0f, -1.0f,
+            1.0f, -1.0f, -1.0f,
+            -1.0f, -1.0f, 1.0f,
+            1.0f, -1.0f, 1.0f
+    };
+
+    
+    unsigned int skyboxVAO, skyboxVBO;
+    glGenVertexArrays(1, &skyboxVAO);
+    glGenBuffers(1, &skyboxVBO);
+    glBindVertexArray(skyboxVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+    
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+          
     // load and create a texture
     // -------------------------
-    unsigned int texture1, texture2;
-    // texture 1
-    // ---------
-    glGenTextures(1, &texture1);
-    glBindTexture(GL_TEXTURE_2D, texture1);
-    // set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // load image, create texture and generate mipmaps
-    int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-    unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
-    // texture 2
-    // ---------
-    glGenTextures(1, &texture2);
-    glBindTexture(GL_TEXTURE_2D, texture2);
-    // set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // load image, create texture and generate mipmaps
-    data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        // note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
+    
+    unsigned int earthTexture2D;
+    initEarthTexture2D(&earthTexture2D);
 
+    unsigned int skyboxTextureCube;
+    glGenTextures(1, &skyboxTextureCube);
+    //glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTextureCube);
+
+    //Skybox cube-----------------------
+    std::vector<std::string> skybox_faces{ "stars.jpg", "stars.jpg", "stars.jpg", "stars.jpg", "stars.jpg", "stars.jpg" };
+    int width, height, nrChannels;
+    for (unsigned int i = 0; i < skybox_faces.size(); i++)
+    {
+        unsigned char* data = stbi_load(skybox_faces[i].c_str(), &width, &height, &nrChannels, 0);
+        if (data)
+        {
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            stbi_image_free(data);
+        }
+        else
+        {
+            std::cout << "Cubemap texture failed to load at path: " << skybox_faces[i] << std::endl;
+            stbi_image_free(data);
+        }
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    //skybox.initCubemapTexture(skybox_faces);
+
+    ourShader.use();
+    ourShader.setInt("textureMap", 0);
+    
+    //unsigned int earthTexture;
+    //std::vector<std::string> textures_faces{ "px.png", "nx.png", "py.png", "ny.png", "pz.png", "nz.png" };
+    //initEarthTexture(textures_faces, &earthTexture);
+    
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
     // -------------------------------------------------------------------------------------------
-    ourShader.use();
-    ourShader.setInt("texture1", 0);
-    ourShader.setInt("texture2", 1);
-    */
+    //ourShader.use();
+    //ourShader.setInt("cubemap", 0);
+
+    //----------------------------------------SKYBOX----------------------------------------------
+
+    
+
+    
+    
+    skyboxShader.use();
+    skyboxShader.setInt("skybox", 0);
+    
 
     // render loop
     // -----------
@@ -203,8 +261,11 @@ int main()
         glm::mat4 view = camera.GetViewMatrix();
         ourShader.setMat4("view", view);
 
-        // render boxes
+        // render Earth
         glBindVertexArray(VAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, earthTexture2D);
+        //glBindTexture(GL_TEXTURE_CUBE_MAP, earthTexture);
         glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
         //model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
@@ -212,6 +273,23 @@ int main()
 
         //glDrawArrays(GL_POINTS, 0, numberOfVertices);
         glDrawElements(GL_TRIANGLES, numberOfVertices, GL_UNSIGNED_INT, 0);
+
+
+        // draw skybox as last
+        glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+        skyboxShader.use();
+        view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
+        skyboxShader.setMat4("view", view);
+        skyboxShader.setMat4("projection", projection);
+        // skybox cube
+        glBindVertexArray(skyboxVAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTextureCube);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        glDepthFunc(GL_LESS); // set depth function back to default
+        
+
         /*
         for (unsigned int i = 0; i < 10; i++)
         {
@@ -235,6 +313,8 @@ int main()
     // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
+    glDeleteVertexArrays(1, &skyboxVAO);
+    glDeleteBuffers(1, &skyboxVBO);
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
@@ -294,5 +374,55 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(yoffset);
+}
+
+void initEarthTextureCubeMap(std::vector<std::string> faces, unsigned int *texture) {
+    glGenTextures(1, texture);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, *texture);
+    // set the texture wrapping parameters
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    // load image, create texture and generate mipmaps
+    int width, height, nrChannels;
+    unsigned char* data;
+
+    for (unsigned int i = 0; i < faces.size(); i++)
+    {
+        data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+        glTexImage2D(
+            GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+            0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data
+        );
+        stbi_image_free(data);
+    }
+}
+
+void initEarthTexture2D(unsigned int *textureID) {
+    glGenTextures(1, textureID);
+    glBindTexture(GL_TEXTURE_2D, *textureID);
+    // set the texture wrapping parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    // set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load image, create texture and generate mipmaps
+    int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
+    unsigned char* data = stbi_load("earth.jpg", &width, &height, &nrChannels, 0);
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
 }
 
