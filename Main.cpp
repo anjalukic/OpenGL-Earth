@@ -14,7 +14,7 @@
 
 const int subdivision = 6;
 
-const int useCubeSphere = 1;
+const int useCubeSphere = 0;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -81,8 +81,8 @@ int main()
     else {
         cubesphere.initEarthTexture2D();
     }
-  
     cubesphere.initEarthHeightTexture();
+  
 
     Skybox skybox = Skybox(&skyboxShader);
     std::vector<std::string> skybox_faces{ "stars.jpg", "stars.jpg", "stars.jpg", "stars.jpg", "stars.jpg", "stars.jpg" };
