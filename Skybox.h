@@ -5,8 +5,9 @@ class Skybox {
 public:
 	unsigned int textureID;
     unsigned int VAO, VBO;
+    Shader* shader;
 
-	Skybox(): skyboxVertices{
+	Skybox(Shader* shader): skyboxVertices{
         // positions          
             -1.0f, 1.0f, -1.0f,
             -1.0f, -1.0f, -1.0f,
@@ -50,6 +51,7 @@ public:
             -1.0f, -1.0f, 1.0f,
             1.0f, -1.0f, 1.0f
     } {
+        this->shader = shader;
         // skybox VAO
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
@@ -64,7 +66,7 @@ public:
 	float skyboxVertices[108];
     void initCubemapTexture(std::vector<std::string> faces){
         glGenTextures(1, &textureID);
-        //glActiveTexture(GL_TEXTURE0);
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
         int width, height, nrChannels;
@@ -73,7 +75,7 @@ public:
             unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
             if (data)
             {
-                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
                 stbi_image_free(data);
             }
             else
@@ -87,6 +89,9 @@ public:
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+        shader->use();
+        shader->setInt("skybox", 0);
     }
 };
 
