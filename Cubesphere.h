@@ -15,6 +15,9 @@ public:
     unsigned int cubemapTexture;
     unsigned int texture2D;
     unsigned int heightTexture;
+    unsigned int specularTexture;
+    unsigned int cubemapHeightTexture;
+    unsigned int cubemapSpecularTexture;
     unsigned int VAO, VBO, EBO;
     int numberOfVerticesToDraw;
     Shader* shader;
@@ -34,6 +37,9 @@ public:
         shader->setInt("textureMap", 0);
         shader->setInt("textureCubeMap", 1);
         shader->setInt("heightMap", 2);
+        shader->setInt("specularMap", 3);
+        shader->setInt("heightCubeMap", 4);
+        shader->setInt("specularCubeMap", 5);
         
         
     }
@@ -113,6 +119,82 @@ public:
             std::cout << "Failed to load texture" << std::endl;
         }
         stbi_image_free(data);
+    }
+
+    void initEarthSpecularTexture() {
+        glGenTextures(1, &specularTexture);
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, specularTexture);
+        // set the texture wrapping parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        // set texture filtering parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        // load image, create texture and generate mipmaps
+        int width, height, nrChannels;
+        stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
+        unsigned char* data = stbi_load("specularMap.png", &width, &height, &nrChannels, 0);
+        if (data)
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+        }
+        else
+        {
+            std::cout << "Failed to load texture" << std::endl;
+        }
+        stbi_image_free(data);
+    }
+
+    void initEarthHeightTextureCubeMap(std::vector<std::string> faces) {
+        glGenTextures(1, &cubemapHeightTexture);
+        glActiveTexture(GL_TEXTURE4);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapHeightTexture);
+        // set the texture wrapping parameters
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        // load image, create texture and generate mipmaps
+        int width, height, nrChannels;
+        unsigned char* data;
+
+        for (unsigned int i = 0; i < faces.size(); i++)
+        {
+            data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+            glTexImage2D(
+                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data
+            );
+            stbi_image_free(data);
+        }
+    }
+
+    void initEarthSpecularTextureCubeMap(std::vector<std::string> faces) {
+        glGenTextures(1, &cubemapSpecularTexture);
+        glActiveTexture(GL_TEXTURE5);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapSpecularTexture);
+        // set the texture wrapping parameters
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        // load image, create texture and generate mipmaps
+        int width, height, nrChannels;
+        unsigned char* data;
+
+        for (unsigned int i = 0; i < faces.size(); i++)
+        {
+            data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+            glTexImage2D(
+                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data
+            );
+            stbi_image_free(data);
+        }
     }
 
 private:
@@ -290,6 +372,7 @@ private:
             }
             break;
         }
+        return 0;
 
     }
 };
